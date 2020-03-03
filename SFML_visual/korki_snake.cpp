@@ -1,16 +1,27 @@
-﻿#include <iostream>
+﻿#include <SFML/Graphics.hpp>
+#include <iostream>
 #include "plansza.h"
 #include <Windows.h>
 #include <conio.h>
 #include <ctime>
 #include <chrono>
-#include <SFML/Graphics.hpp>
+
 using namespace std;
 sf::RectangleShape segment, sciana, jablko;
 sf::Texture segmentT, scianaT, jablkoT;
+sf::Text message;
+sf::Text print(string msg)
+{
+	message.setString(msg);
+	message.setFillColor(sf::Color::Magenta);
+	message.setCharacterSize(60);
+	message.setPosition(0, 0);
+	return message;
+	
+}
 void zwracaMape(int** mapa, sf::RenderWindow* window)
 {
-	system("cls");
+	
 
 	for (int i = 0; i < 20; i++)
 	{
@@ -45,11 +56,11 @@ void zwracaMape(int** mapa, sf::RenderWindow* window)
 }
 void Load()
 {
-	if (!segmentT.loadFromFile("img/Segment.png"))
+	if (!segmentT.loadFromFile("img/segment.png"))
 	{
 		cerr << "Nie można zaladowac grafiki" << endl;
 	}
-	if (!scianaT.loadFromFile("img/Scianat.png"))
+	if (!scianaT.loadFromFile("img/Sciana.png"))
 	{
 		cerr << "Nie można zaladowac grafiki" << endl;
 	}
@@ -57,9 +68,9 @@ void Load()
 	{
 		cerr << "Nie można zaladowac grafiki" << endl;
 	}
-	segment.setSize(sf::Vector2f(50, 50));
-	sciana.setSize(sf::Vector2f(50, 50));
-	jablko.setSize(sf::Vector2f(50, 50));
+	segment.setSize(sf::Vector2f(30, 30));
+	sciana.setSize(sf::Vector2f(30, 30));
+	jablko.setSize(sf::Vector2f(30, 30));
 	segment.setTexture(&segmentT);
 	sciana.setTexture(&scianaT);
 	jablko.setTexture(&jablkoT);
@@ -112,9 +123,9 @@ int main()
 			{
 				start = chrono::system_clock::now();
 				gra.update();
-				zwracaMape(gra.getmapa(),&window);
+				
 				window.clear();
-
+				zwracaMape(gra.getmapa(), &window);
 				window.display();
 			}
 			sf::Event event;
@@ -122,14 +133,38 @@ int main()
 			{
 				if (event.type == sf::Event::Closed)
 					window.close();
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::D)
+					gra.setkierunek(wonsz::DOL);
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::S)
+					gra.setkierunek(wonsz::PRAWO);
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::A)
+					gra.setkierunek(wonsz::GORA);
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::W)
+					gra.setkierunek(wonsz::LEWO);
 			}
 
-			gra.setkierunek(Kierunek());
+			
 
 		}
-		cout << "TWOJ WYNIK TO: " << gra.getpunkty() << " PUNKTY!";
 		
+         cout << "TWOJ WYNIK TO: " << gra.getpunkty() << " PUNKTY!";
+		 cout << "Czy chcesz zagrac jeszcze raz? " << endl <<"0. Tak"<<endl<<"1. Nie"<<endl;
+		 int decyzja;
+		 cin >> decyzja;
+		 if (decyzja == 0)
+		 {
 
+		 }
+		 else if (decyzja == 1)
+		 {
+			 window.close();
+		 }
+		 else
+		 {
+			 window.close();
+		 }
+		
+		
 		
 	}
 	
@@ -137,4 +172,3 @@ int main()
 	
 	return 0;
 }
-
